@@ -1,0 +1,10 @@
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\obj\x86\Debug\SpriteMap.Main.resources
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\obj\x86\Debug\SpriteMap.Properties.Resources.resources
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\obj\x86\Debug\SpriteMap.csproj.GenerateResource.Cache
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\bin\Debug\SpriteMap.exe
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\bin\Debug\SpriteMap.pdb
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\obj\x86\Debug\SpriteMap.exe
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\obj\x86\Debug\SpriteMap.pdb
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\Sprite Map\obj\x86\Debug\SpriteMap.csprojResolveAssemblyReference.cache
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\SpriteMap\obj\x86\Debug\SpriteMap.exe
+C:\Users\nicholas.zaharias\Desktop\SpriteMapGenerator\SpriteMap\obj\x86\Debug\SpriteMap.pdb
