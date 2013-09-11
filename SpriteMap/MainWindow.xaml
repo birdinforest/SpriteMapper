@@ -1,0 +1,45 @@
+﻿<Window x:Class="SpriteMap.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:SpriteMap"
+        Title="SpriteMapGenerator" Height="600" Width="800" BorderThickness="0">
+    <Grid>
+        <Menu Height="23" HorizontalAlignment="Left" Name="mMain" VerticalAlignment="Top" Width="790">
+            <MenuItem Header="_File " Name="miFile">
+                <MenuItem Header="_New" Click="miFileNew_Click" Name="miNew" ></MenuItem>
+                <MenuItem Header="_Open" Click="miFileOpen_Click" Name="miOpen"></MenuItem>
+                <MenuItem Header="_Save" Click="miFileSave_Click" Name="miSave"></MenuItem>
+                <MenuItem Header="_Save As..." Click="miFileSaveAs_Click" Name="miSaveAs"></MenuItem>
+                <MenuItem Header="_Export" Click="miFileExport_Click" Name="miExport"></MenuItem>
+                <MenuItem Header="_Export As..." Click="miFileExportAs_Click" Name="miExportAs"></MenuItem>
+                <MenuItem Header="_Quit" Click="miFileQuit_Click" Name="miQuit"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Edit " Name="miEdit">
+                <MenuItem Header="_Add Sprites" Click="miEditAddSprites_Click" Name="miAddSprites"></MenuItem>
+                <MenuItem Header="_Add Folder" Click="miEditAddFolder_Click" Name="miAddFolder"></MenuItem>
+                <MenuItem Header="_Delete" Click="miEditDelete_Click" Name="miDelete"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="_View " Name="miView">
+            </MenuItem>
+            <MenuItem Header="_Tools " Name="miTools">
+            </MenuItem>
+            <MenuItem Header="_Help " Name="miHelp">
+            </MenuItem>
+        </Menu>
+
+        <Button Height="50" HorizontalAlignment="Left" Margin="18,29,0,0" Name="btnNew" VerticalAlignment="Top" Width="50" BorderThickness="1"></Button>
+        <TextBlock Text="New" TextAlignment="Left" Margin="30,63,724,482"></TextBlock>
+        <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="74,29,0,0" Name="btnOpen" VerticalAlignment="Top" Width="50"></Button>
+        <Button BorderThickness="1" Height="50" HorizontalAlignment="Right" Margin="0,29,598,0" Name="btnSave" VerticalAlignment="Top" Width="50"></Button>
+        <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="365,29,0,0" Name="btnAddSprites" VerticalAlignment="Top" Width="75"></Button>
+        <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="446,29,0,0" Name="btnAddFolder" VerticalAlignment="Top" Width="75"></Button>
+        <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="527,29,0,0" Name="btnDelete" VerticalAlignment="Top" Width="75"></Button>
+        
+        <local:MyCanvas Height="442" HorizontalAlignment="Left" Margin="193,107,0,0" x:Name="cSpriteSheet" VerticalAlignment="Top" Width="573" AllowDrop="False"></local:MyCanvas>
+        <Label Content="Preview" Height="28" HorizontalAlignment="Left" Margin="68,353,0,0" Name="label1" VerticalAlignment="Top"></Label>
+        <Label Content="Sprites" Height="28" HorizontalAlignment="Left" Margin="74,85,0,0" Name="label2" VerticalAlignment="Top"></Label>
+        <Label Content="Sprite Sheet" Height="28" HorizontalAlignment="Left" Margin="446,85,0,0" Name="label3" VerticalAlignment="Top"></Label>
+        <ListBox Name="lbSprites" Width="175" Margin="12,109,591,214"></ListBox>
+        <local:MyCanvas Height="175" x:Name="cTilePreview" Width="175" Margin="12,374,591,12"></local:MyCanvas>
+    </Grid>
+</Window>
