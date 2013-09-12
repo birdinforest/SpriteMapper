@@ -28,18 +28,41 @@
         </Menu>
 
         <Button Height="50" HorizontalAlignment="Left" Margin="18,29,0,0" Name="btnNew" VerticalAlignment="Top" Width="50" BorderThickness="1"></Button>
-        <TextBlock Text="New" TextAlignment="Left" Margin="30,63,724,482"></TextBlock>
+        <TextBlock Text="New" TextAlignment="Center" Margin="18,63,0,482" HorizontalAlignment="Left" Width="50"></TextBlock>
         <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="74,29,0,0" Name="btnOpen" VerticalAlignment="Top" Width="50"></Button>
+        <TextBlock Text="Open" TextAlignment="Center" Margin="74,63,654,482"></TextBlock>
         <Button BorderThickness="1" Height="50" HorizontalAlignment="Right" Margin="0,29,598,0" Name="btnSave" VerticalAlignment="Top" Width="50"></Button>
+        <TextBlock Text="Save" TextAlignment="Center" Margin="130,63,598,482"></TextBlock>
         <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="365,29,0,0" Name="btnAddSprites" VerticalAlignment="Top" Width="75"></Button>
+        <TextBlock Text="Add Sprites" TextAlignment="Center" Margin="365,63,338,482"></TextBlock>
         <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="446,29,0,0" Name="btnAddFolder" VerticalAlignment="Top" Width="75"></Button>
+        <TextBlock Text="Add Folder" TextAlignment="Center" Margin="446,63,257,482"></TextBlock>
         <Button BorderThickness="1" Height="50" HorizontalAlignment="Left" Margin="527,29,0,0" Name="btnDelete" VerticalAlignment="Top" Width="75"></Button>
+        <TextBlock Text="Delete" TextAlignment="Center" Margin="527,63,176,482"></TextBlock>
+
+        <Label Content="Preview" Height="28" HorizontalAlignment="Left" Margin="12,353,0,0" Name="label1" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="175"></Label>
+        <Label Content="Sprites" Height="28" HorizontalAlignment="Left" Margin="12,85,0,0" Name="label2" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="175"></Label>
+        <Label Content="Sprite Sheet" Height="28" HorizontalAlignment="Left" Margin="193,85,0,0" Name="label3" VerticalAlignment="Top" Width="573" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+    
+        <Canvas
+            Name="cSpriteSheet" 
+            Margin="193,109,12,12" 
+            AllowDrop="True" 
+            MouseLeftButtonDown="cSpriteSheet_MouseLeftButtonDown" 
+            Background="Transparent">
+        </Canvas>
         
-        <local:MyCanvas Height="442" HorizontalAlignment="Left" Margin="193,107,0,0" x:Name="cSpriteSheet" VerticalAlignment="Top" Width="573" AllowDrop="False"></local:MyCanvas>
-        <Label Content="Preview" Height="28" HorizontalAlignment="Left" Margin="68,353,0,0" Name="label1" VerticalAlignment="Top"></Label>
-        <Label Content="Sprites" Height="28" HorizontalAlignment="Left" Margin="74,85,0,0" Name="label2" VerticalAlignment="Top"></Label>
-        <Label Content="Sprite Sheet" Height="28" HorizontalAlignment="Left" Margin="446,85,0,0" Name="label3" VerticalAlignment="Top"></Label>
-        <ListBox Name="lbSprites" Width="175" Margin="12,109,591,214"></ListBox>
-        <local:MyCanvas Height="175" x:Name="cTilePreview" Width="175" Margin="12,374,591,12"></local:MyCanvas>
+        <local:PreviewCanvas 
+            x:Name="cTilePreview" 
+            Margin="12,374,591,12">            
+        </local:PreviewCanvas>
+        
+        <ListBox 
+            Name="lbSprites" 
+            Width="175" 
+            Margin="12,109,591,214" 
+            AllowDrop="True" 
+            SelectionChanged="lbSprites_SelectionChanged">
+        </ListBox>
     </Grid>
 </Window>

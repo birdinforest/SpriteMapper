@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace SpriteMap
 {
-    public class MyCanvas : Canvas
+    public class PreviewCanvas : Canvas
     {
         BitmapImage background = null;
 
