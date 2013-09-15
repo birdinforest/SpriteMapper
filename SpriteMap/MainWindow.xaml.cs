@@ -20,9 +20,22 @@ namespace SpriteMap
     /// </summary>
     public partial class MainWindow : Window
     {
+        KeyValuePair<string, Image> pSprites = new KeyValuePair<string, Image>();
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Image image = new Image {};
+            Image image2 = new Image {};
+
+            image.Source = new BitmapImage(new Uri("C:\\Users\\Applzor\\Documents\\Programming\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\blue.png"));
+            image2.Source = new BitmapImage(new Uri("C:\\Users\\Applzor\\Documents\\Programming\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\red.png"));
+
+            cSpriteSheet.Children.Add(image);
+            cSpriteSheet.Children.Add(image2);
+
+            InkCanvas.SetLeft(image, 100);
         }
 
         //  File Menu Items
@@ -103,6 +116,12 @@ namespace SpriteMap
 
         }
 
+        //  SpriteSheet InkCanvas
+        private void cSpriteSheet_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
         //  Functions
         public static string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
@@ -114,5 +133,7 @@ namespace SpriteMap
             files.Sort();
             return files.ToArray();
         }
+
+
     }
 }
