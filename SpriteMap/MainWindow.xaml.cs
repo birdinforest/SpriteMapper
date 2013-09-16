@@ -20,22 +20,27 @@ namespace SpriteMap
     /// </summary>
     public partial class MainWindow : Window
     {
-        KeyValuePair<string, Image> pSprites = new KeyValuePair<string, Image>();
+        Dictionary<string, string> dSprites = new Dictionary<string, string>();
+        Image iTilePreview = new Image();
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Image image = new Image {};
-            Image image2 = new Image {};
+            Image image = new Image();
+            Image image2 = new Image();
+            Image image3 = new Image();
 
-            image.Source = new BitmapImage(new Uri("C:\\Users\\Applzor\\Documents\\Programming\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\blue.png"));
-            image2.Source = new BitmapImage(new Uri("C:\\Users\\Applzor\\Documents\\Programming\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\red.png"));
+            image.Source = new BitmapImage(new Uri("C:\\Users\\nicholas.zaharias\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\blue.png"));
+            image2.Source = new BitmapImage(new Uri("C:\\Users\\nicholas.zaharias\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\red.png"));
+            image3.Source = new BitmapImage(new Uri("C:\\Users\\nicholas.zaharias\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\blue.png"));
 
             cSpriteSheet.Children.Add(image);
             cSpriteSheet.Children.Add(image2);
+            cSpriteSheet.Children.Add(image3);
 
-            InkCanvas.SetLeft(image, 100);
+            Canvas.SetLeft(image, 100);
+            Canvas.SetTop(image2, 100);
         }
 
         //  File Menu Items
@@ -81,10 +86,10 @@ namespace SpriteMap
             {
                 foreach (string filepath in ofd.FileNames)
                 {
-                    cTilePreview.LoadImage(filepath);
                     int offset = filepath.LastIndexOf("\\");
                     string name = filepath.Substring(offset + 1, filepath.Length - offset - 1);
                     lbSprites.Items.Add(name);
+                    dSprites.Add(name, filepath);
                 }
             }
         }
@@ -116,6 +121,19 @@ namespace SpriteMap
 
         }
 
+        //  Sprites Listbox
+        private void lbSprites_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            cTilePreview.Children.Remove(iTilePreview);
+
+            string filepath = dSprites[lbSprites.SelectedItem.ToString()];
+            iTilePreview.Source = new BitmapImage(new Uri(filepath));
+            cTilePreview.Children.Add(iTilePreview);
+            Canvas.SetLeft(iTilePreview, cTilePreview.Width / 2);
+            Canvas.SetTop(iTilePreview, cTilePreview.Height / 2);
+            
+        }
+
         //  SpriteSheet InkCanvas
         private void cSpriteSheet_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -133,7 +151,5 @@ namespace SpriteMap
             files.Sort();
             return files.ToArray();
         }
-
-
     }
 }

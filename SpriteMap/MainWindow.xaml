@@ -30,10 +30,11 @@
         <Label Content="Sprites" Height="28" HorizontalAlignment="Left" Margin="12,85,0,0" Name="label2" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="175"></Label>
         <Label Content="Sprite Sheet" Height="28" HorizontalAlignment="Left" Margin="193,85,0,0" Name="label3" VerticalAlignment="Top" Width="573" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
     
-        <InkCanvas Name="cSpriteSheet" Margin="193,109,12,12" AllowDrop="True" Background="Red" MouseLeftButtonDown="cSpriteSheet_MouseLeftButtonDown"></InkCanvas>
-        <local:PreviewCanvas x:Name="cTilePreview" Margin="12,374,591,12"></local:PreviewCanvas>
+        <Canvas Name="cSpriteSheet" Margin="193,109,12,12" AllowDrop="True" Background="Red" MouseLeftButtonDown="cSpriteSheet_MouseLeftButtonDown"></Canvas>
+        <Canvas Name="cTilePreview" Margin="12,374,591,12" Width="175" Height="175" Background="Blue"></Canvas>
+        <!--local:PreviewCanvas x:Name="cTilePreview" Margin="12,374,591,12"></local:PreviewCanvas-->
 
-        <ListBox Name="lbSprites" Width="175" Margin="12,109,591,214" AllowDrop="True"></ListBox>
+        <ListBox Name="lbSprites" Margin="12,109,591,214" AllowDrop="True" SelectionChanged="lbSprites_SelectionChanged"></ListBox>
 
     </Grid>
 </Window>
