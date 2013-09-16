@@ -2,33 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace SpriteMap
 {
     public class Tile
     {
-        public double X, Y;
-        public double Width, Height;
-        public BitmapImage Sprite;
         public string Name;
         public string Filepath;
+        public Image Sprite;
+        public Point Position;
+        public Point Size;
 
-        public Tile(string _Filepath, double _X, double _Y)
+        public Tile(string _Filepath, Point _Position)
         {
             Filepath = _Filepath;
 
             int offset = _Filepath.LastIndexOf("\\");
             Name = _Filepath.Substring(offset + 1, _Filepath.Length - offset - 1);
 
-            Sprite = new BitmapImage(new Uri(Filepath));
+            Position = _Position;
 
-            Width = Sprite.Width;
-            Height = Sprite.Height;
+            Sprite = new Image();
+            BitmapImage image = new BitmapImage(new Uri(Filepath));
+            Sprite.Source = image;
+            Canvas.SetLeft(Sprite, Position.X);
+            Canvas.SetTop(Sprite, Position.Y);
 
-            X = _X;
-            Y = _Y;
-            
+            Size.X = image.Width;
+            Size.Y = image.Height;
         }
     }
 }

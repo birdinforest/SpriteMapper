@@ -20,27 +20,29 @@ namespace SpriteMap
     /// </summary>
     public partial class MainWindow : Window
     {
+        //  Sprite Sheet Containters
         Dictionary<string, string> dSprites = new Dictionary<string, string>();
+        List<Tile> lSpriteSheet = new List<Tile>();
+        Tile tSelectedTile = null;
+        Tile tMoveTile = null;
+        bool clicked = false;
+        Point adjust = new Point();
+
+        //  Preview Containers
         Image iTilePreview = new Image();
 
         public MainWindow()
         {
             InitializeComponent();
 
-            Image image = new Image();
-            Image image2 = new Image();
-            Image image3 = new Image();
+            //Canvas.SetLeft(image, 100);            
+        }
 
-            image.Source = new BitmapImage(new Uri("C:\\Users\\nicholas.zaharias\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\blue.png"));
-            image2.Source = new BitmapImage(new Uri("C:\\Users\\nicholas.zaharias\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\red.png"));
-            image3.Source = new BitmapImage(new Uri("C:\\Users\\nicholas.zaharias\\Git\\SpriteMapper\\SpriteMap\\Resources\\images\\blue.png"));
-
-            cSpriteSheet.Children.Add(image);
-            cSpriteSheet.Children.Add(image2);
-            cSpriteSheet.Children.Add(image3);
-
-            Canvas.SetLeft(image, 100);
-            Canvas.SetTop(image2, 100);
+        //  Window
+        private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            clicked = false;
+            tMoveTile = null;
         }
 
         //  File Menu Items
@@ -92,6 +94,7 @@ namespace SpriteMap
                     dSprites.Add(name, filepath);
                 }
             }
+            lbSprites.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
         }
         private void miEditAddFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -114,7 +117,8 @@ namespace SpriteMap
                     string name = filepath.Substring(offset + 1, filepath.Length - offset - 1);
                     lbSprites.Items.Add(name);
                 }
-            }            
+            }
+            lbSprites.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
         }
         private void miEditDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -126,18 +130,81 @@ namespace SpriteMap
         {
             cTilePreview.Children.Remove(iTilePreview);
 
+            if (lbSprites.SelectedItem == null)
+                return;
+
             string filepath = dSprites[lbSprites.SelectedItem.ToString()];
-            iTilePreview.Source = new BitmapImage(new Uri(filepath));
+            BitmapImage image = new BitmapImage(new Uri(filepath));
+
+            iTilePreview.Source = image;
+            iTilePreview.Width = (image.Width > cTilePreview.Width) ? cTilePreview.Width : image.Width;
+            iTilePreview.Height = (image.Height > cTilePreview.Height) ? cTilePreview.Height : image.Height;
+
+
             cTilePreview.Children.Add(iTilePreview);
-            Canvas.SetLeft(iTilePreview, cTilePreview.Width / 2);
-            Canvas.SetTop(iTilePreview, cTilePreview.Height / 2);
-            
+            Canvas.SetLeft(iTilePreview, (cTilePreview.Width / 2) - (iTilePreview.Width / 2));
+            Canvas.SetTop(iTilePreview, (cTilePreview.Height / 2) - (iTilePreview.Height / 2));            
+        }     
+        private void lbSprites_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListBox parent = (ListBox)sender;
+            object data = GetDataFromListBox(parent, e.GetPosition(parent));
+            lbSprites.SelectedItem = data;
+
+            if (data != null)
+            {
+                DragDrop.DoDragDrop(parent, data, DragDropEffects.Move);
+            }
         }
 
-        //  SpriteSheet InkCanvas
+        //  SpriteSheet Canvas
+        private void cSpriteSheet_Drop(object sender, DragEventArgs e)
+        {
+            object data = e.Data.GetData(typeof(string));
+            Point point = e.GetPosition((Canvas)sender);
+
+            string filepath = dSprites[data.ToString()];
+
+            Tile tile = new Tile(filepath, point);
+            lSpriteSheet.Add(tile);
+            cSpriteSheet.Children.Add(tile.Sprite);
+        }
         private void cSpriteSheet_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
+            if (!clicked)
+            {
+                clicked = true;
 
+                foreach (Tile tile in lSpriteSheet)
+                {
+                    if ((mouse.X < (tile.Position.X + tile.Size.X)) && (mouse.X > tile.Position.X) && (mouse.Y < (tile.Position.Y + tile.Size.Y)) && (mouse.Y > tile.Position.Y))
+                    {
+                        tSelectedTile = tile;
+                        tMoveTile = tile;
+                    }
+                }
+            }
+
+            if (tMoveTile != null)
+            {
+                adjust = (Point)(tMoveTile.Position - mouse);
+                Canvas.SetLeft(tMoveTile.Sprite, mouse.X + adjust.X);
+                Canvas.SetTop(tMoveTile.Sprite, mouse.Y + adjust.Y);
+                tMoveTile.Position.X = mouse.X + adjust.X;
+                tMoveTile.Position.Y = mouse.Y + adjust.Y;
+            }
+        }        
+        private void cSpriteSheet_MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
+            if (tMoveTile != null)
+            {
+                Canvas.SetLeft(tMoveTile.Sprite, mouse.X + adjust.X);
+                Canvas.SetTop(tMoveTile.Sprite, mouse.Y + adjust.Y);
+                tMoveTile.Position.X = mouse.X + adjust.X;
+                tMoveTile.Position.Y = mouse.Y + adjust.Y;
+            }
         }
 
         //  Functions
@@ -151,5 +218,48 @@ namespace SpriteMap
             files.Sort();
             return files.ToArray();
         }
+        private static object GetDataFromListBox(ListBox source, Point point)
+        {
+            UIElement element = source.InputHitTest(point) as UIElement;
+            if (element != null)
+            {
+                object data = DependencyProperty.UnsetValue;
+                while (data == DependencyProperty.UnsetValue)
+                {
+                    data = source.ItemContainerGenerator.ItemFromContainer(element);
+                    if (data == DependencyProperty.UnsetValue)
+                    {
+                        element = VisualTreeHelper.GetParent(element) as UIElement;
+                    }
+                    if (element == source)
+                    {
+                        return null;
+                    }
+                }
+                if (data != DependencyProperty.UnsetValue)
+                {
+                    return data;
+                }
+            }
+            return null;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
