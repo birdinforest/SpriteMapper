@@ -2,9 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:SpriteMap"
-        Title="SpriteMapGenerator" Height="600" Width="800" BorderThickness="0" MouseLeftButtonUp="Window_MouseLeftButtonUp">
-    <Grid>
-        <Menu Height="23" HorizontalAlignment="Left" Name="mMain" VerticalAlignment="Top" Width="790">
+        Title="SpriteMapGenerator" Height="700" Width="950" BorderThickness="0" MouseLeftButtonUp="Window_MouseLeftButtonUp" MinWidth="800" MinHeight="600" HorizontalAlignment="Left" VerticalAlignment="Top" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Grid Background="#FF3B3939">
+        <Menu Grid.Row="0" HorizontalAlignment="Stretch" Name="mMain" VerticalAlignment="Top">
             <MenuItem Header="_File " Name="miFile">
                 <MenuItem Header="_New" Click="miFileNew_Click" Name="miNew" ></MenuItem>
                 <MenuItem Header="_Open" Click="miFileOpen_Click" Name="miOpen"></MenuItem>
@@ -26,22 +26,31 @@
             <MenuItem Header="_Help " Name="miHelp">
             </MenuItem>
         </Menu>
-        <Label Content="Preview" Height="28" HorizontalAlignment="Left" Margin="12,363,0,0" Name="label1" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="160"></Label>
-        <Label Content="Sprites" Height="28" HorizontalAlignment="Left" Margin="12,75,0,0" Name="label2" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="175"></Label>
-        <Label Content="Sprite Sheet" Height="28" HorizontalAlignment="Left" Margin="201,75,0,0" Name="label3" VerticalAlignment="Top" Width="577" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
-    
-        <Canvas Name="cSpriteSheet" Margin="188,101,0,0" AllowDrop="True" HorizontalAlignment="Left" VerticalAlignment="Top" Height="448" Width="586" Drop="cSpriteSheet_Drop" MouseLeftButtonDown="cSpriteSheet_MouseLeftButtonDown" MouseMove="cSpriteSheet_MouseMove">
-            <Canvas.Background>
-                <ImageBrush ImageSource="/SpriteMap;component/Resources/Images/background.png" Stretch="UniformToFill" TileMode="Tile" Viewport="0,0,21.3306662044397,21.3306662044397" ViewportUnits="Absolute" />
-            </Canvas.Background>
-        </Canvas>
-        <Canvas Name="cTilePreview" Margin="12,389,606,12" Width="160" Height="160" AllowDrop="True">
-            <Canvas.Background>
-                <ImageBrush ImageSource="/SpriteMap;component/Resources/Images/background.png" Stretch="UniformToFill" TileMode="Tile" Viewport="0,0,21.3306662044397,21.3306662044397" ViewportUnits="Absolute" />
-            </Canvas.Background>
-        </Canvas>
+        <Border Name="bSpriteBorder" BorderBrush="#FF939D9D" BorderThickness="0.5" Margin="202,63,12,12">
+            <Canvas Name="cSpriteBackground" ClipToBounds="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FF525252" MouseMove="cSpriteBackground_MouseMove" MouseLeftButtonDown="cSpriteBackground_MouseLeftButtonDown">            
+                <Canvas Name="cSpriteSheet" AllowDrop="True" Drop="cSpriteSheet_Drop" MouseLeftButtonDown="cSpriteSheet_MouseLeftButtonDown" MouseMove="cSpriteSheet_MouseMove" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="400" Height="300">
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="/SpriteMap;component/Resources/Images/trans.png" Stretch="UniformToFill" TileMode="Tile" Viewport="0,0,21.3306662044397,21.3306662044397" ViewportUnits="Absolute" />
+                    </Canvas.Background>
+                </Canvas>
+            </Canvas>              
+        </Border>
+        
+        <Border BorderBrush="#FF939D9D" BorderThickness="0.5" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="12,0,0,12" Width="184" Height="184">
+                <Canvas Name="cTilePreview" ClipToBounds="True" HorizontalAlignment="Center" VerticalAlignment="Center" Height="180" Width="180">
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="/SpriteMap;component/Resources/Images/trans.png" Stretch="UniformToFill" TileMode="Tile" Viewport="0,0,21.3306662044397,21.3306662044397" ViewportUnits="Absolute" />
+                    </Canvas.Background>
+                </Canvas>
+        </Border>
 
-        <ListBox Name="lbSprites" Margin="12,101,606,204" AllowDrop="True" SelectionChanged="lbSprites_SelectionChanged" PreviewMouseLeftButtonDown="lbSprites_PreviewMouseLeftButtonDown"></ListBox>
-
+        <Border Margin="12,63,0,201" BorderBrush="#FF939D9D" BorderThickness="0.5" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="184">
+            <ListView Background="#FF525252" Foreground="White" Name="lbSprites"  AllowDrop="True" SelectionChanged="lbSprites_SelectionChanged" PreviewMouseLeftButtonDown="lbSprites_PreviewMouseLeftButtonDown" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            </ListView>        
+        </Border>
+        
+        <Button Content="Add" Width="30" Height="30" HorizontalAlignment="Left" Margin="14,27,0,0" Name="btnSpriteAdd" VerticalAlignment="Top" Click="btnSpriteAdd_Click" />
+        <Button Content="Add" Width="30" Height="30" HorizontalAlignment="Left" Margin="50,27,0,0" Name="btnFolderAdd" VerticalAlignment="Top" Click="btnFolderAdd_Click" />
+        <Button Content="Del" Width="30" Height="30" HorizontalAlignment="Left" Margin="86,27,0,0" Name="btnDelete" VerticalAlignment="Top" />
     </Grid>
 </Window>

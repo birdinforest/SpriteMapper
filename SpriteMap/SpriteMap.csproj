@@ -95,9 +95,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\background.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Images\trans.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
