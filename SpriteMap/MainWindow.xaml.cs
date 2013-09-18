@@ -35,7 +35,7 @@ namespace SpriteMap
 
         public MainWindow()
         {
-            InitializeComponent();              
+            InitializeComponent();
         }
 
         //  Window
@@ -179,11 +179,14 @@ namespace SpriteMap
         {
             object data = e.Data.GetData(typeof(string));
             Point point = e.GetPosition((Canvas)sender);
+            point.X = (int)point.X / GridSnap * GridSnap;
+            point.Y = (int)point.Y / GridSnap * GridSnap;
 
             string filepath = dSprites[data.ToString()];
 
             Tile tile = new Tile(filepath, point);
             lSpriteSheet.Add(tile);
+            lbLayers.Items.Add(tile.Name);
             cSpriteSheet.Children.Add(tile.Sprite);
         }
         private void cSpriteSheet_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -196,7 +199,7 @@ namespace SpriteMap
                         tMoveTile = tile;
             }
 
-            //  
+            //  Finds the distance between the top corner of tile and the mouse
             if (tMoveTile != null)
                 distMouse = (Point)(tMoveTile.Position - mouse);
         }        
@@ -216,7 +219,7 @@ namespace SpriteMap
         private void cSpriteBackground_MouseMove(object sender, MouseEventArgs e)
         {
             Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
-            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && clicked)
             {
                 cSpriteSheet.SetValue(Canvas.LeftProperty, mouse.X + distMouse.X);
                 cSpriteSheet.SetValue(Canvas.TopProperty, mouse.Y + distMouse.Y);
