@@ -26,7 +26,8 @@ namespace SpriteMap
         Tile tSelectedTile = null;
         Tile tMoveTile = null;
         bool clicked = false;
-        Point distMouse = new Point();
+        Point distMouseCanvas = new Point();
+        Point distMouseSheet = new Point();
         int GridSize = 32;
         int GridSnap = 16;
 
@@ -36,17 +37,28 @@ namespace SpriteMap
         public MainWindow()
         {
             InitializeComponent();
+            RenderOptions.ProcessRenderMode = System.Windows.Interop.RenderMode.Default;
         }
 
         //  Window
         private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             clicked = false;
-            tMoveTile = null;
         }
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             clicked = true;
+        }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double WW = (double)GetValue(Window.ActualWidthProperty);
+            double WH = (double)GetValue(Window.ActualHeightProperty);
+
+            double CW = (double)cSpriteSheet.GetValue(Canvas.WidthProperty);
+            double CH = (double)cSpriteSheet.GetValue(Canvas.HeightProperty);
+
+            cSpriteSheet.SetValue(Canvas.LeftProperty, (WW/2) - (CW/2));
+            cSpriteSheet.SetValue(Canvas.TopProperty, (WH / 2) - (CH / 2));
         }
 
         //  File Menu Items
@@ -188,51 +200,48 @@ namespace SpriteMap
             lSpriteSheet.Add(tile);
             lbLayers.Items.Add(tile.Name);
             cSpriteSheet.Children.Add(tile.Sprite);
-        }
-        private void cSpriteSheet_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
-            if (!clicked)
-            {
-                foreach (Tile tile in lSpriteSheet)
-                    if ((mouse.X < (tile.Position.X + tile.Size.X)) && (mouse.X > tile.Position.X) && (mouse.Y < (tile.Position.Y + tile.Size.Y)) && (mouse.Y > tile.Position.Y))
-                        tMoveTile = tile;
-            }
+        }      
 
-            //  Finds the distance between the top corner of tile and the mouse
-            if (tMoveTile != null)
-                distMouse = (Point)(tMoveTile.Position - mouse);
-        }        
-        private void cSpriteSheet_MouseMove(object sender, MouseEventArgs e)
+        private void cSpriteBackground_MouseMove(object sender, MouseEventArgs e)
         {
             Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
-            if (tMoveTile != null)
+            Point mouseB = e.MouseDevice.GetPosition(cSpriteSheet);
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) && clicked)
             {
-                tMoveTile.Position.X = (int)(mouse.X + distMouse.X) / GridSnap * GridSnap;
-                tMoveTile.Position.Y = (int)(mouse.Y + distMouse.Y) / GridSnap * GridSnap;
+                cSpriteSheet.SetValue(Canvas.LeftProperty, mouse.X + distMouseCanvas.X);
+                cSpriteSheet.SetValue(Canvas.TopProperty, mouse.Y + distMouseCanvas.Y);
+            }
+            else if (tMoveTile != null && Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                tMoveTile.Position.X = (int)(mouseB.X + distMouseSheet.X) / GridSnap * GridSnap;
+                tMoveTile.Position.Y = (int)(mouseB.Y + distMouseSheet.Y) / GridSnap * GridSnap;
 
                 Canvas.SetLeft(tMoveTile.Sprite, tMoveTile.Position.X);
                 Canvas.SetTop(tMoveTile.Sprite, tMoveTile.Position.Y);
             }
         }
-
-        private void cSpriteBackground_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) && clicked)
-            {
-                cSpriteSheet.SetValue(Canvas.LeftProperty, mouse.X + distMouse.X);
-                cSpriteSheet.SetValue(Canvas.TopProperty, mouse.Y + distMouse.Y);
-            }
-        }
         private void cSpriteBackground_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point mouse = e.MouseDevice.GetPosition((Canvas)sender);
-            if (tMoveTile == null) 
+            Point mouseB = e.MouseDevice.GetPosition(cSpriteSheet);
+
+            if (!clicked)
             {
-                Point sheetPos = new Point((double)cSpriteSheet.GetValue(Canvas.LeftProperty), (double)cSpriteSheet.GetValue(Canvas.TopProperty));
-                distMouse = (Point)(sheetPos - mouse);
+                for (int i = 0; i < lSpriteSheet.Count; ++i)
+                {
+                    if ((mouseB.X < (lSpriteSheet[i].Position.X + lSpriteSheet[i].Size.X)) && (mouseB.X > lSpriteSheet[i].Position.X) && (mouseB.Y < (lSpriteSheet[i].Position.Y + lSpriteSheet[i].Size.Y)) && (mouseB.Y > lSpriteSheet[i].Position.Y))
+                    {
+                        tMoveTile = lSpriteSheet[i];
+                        lbLayers.SelectedIndex = i;
+                    }
+                }
             }
+
+            //  Finds the distance between the top corner of Object and the Mouse
+            if (tMoveTile != null)
+                distMouseSheet = (Point)(tMoveTile.Position - mouseB);
+            Point sheetPos = new Point((double)cSpriteSheet.GetValue(Canvas.LeftProperty), (double)cSpriteSheet.GetValue(Canvas.TopProperty));
+            distMouseCanvas = (Point)(sheetPos - mouse);
         }
 
         //  Functions
@@ -270,6 +279,17 @@ namespace SpriteMap
                 }
             }
             return null;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+                tMoveTile = null;
+        }
+
+        private void lbLayers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tMoveTile = lSpriteSheet[lbLayers.SelectedIndex];
         }
 
 
