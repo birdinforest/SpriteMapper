@@ -23,12 +23,10 @@ namespace SpriteMap
         //  Sprite Sheet Containters
         Dictionary<string, string> dSprites = new Dictionary<string, string>();
         List<Tile> lSpriteSheet = new List<Tile>();
-        Tile tSelectedTile = null;
         Tile tMoveTile = null;
         bool clicked = false;
         Point distMouseCanvas = new Point();
         Point distMouseSheet = new Point();
-        int GridSize = 32;
         int GridSnap = 16;
 
         //  Preview Containers
@@ -80,7 +78,15 @@ namespace SpriteMap
         }
         private void miFileExport_Click(object sender, RoutedEventArgs e)
         {
+            string path = Directory.GetCurrentDirectory();
+            FileStream fs = new FileStream(path, FileMode.CreateNew);
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)cSpriteSheet.Width, (int)cSpriteSheet.Height, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            rtb.Render(cSpriteSheet);
 
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+            pngEncoder.Save(fs);
+            fs.Close();
         }
         private void miFileExportAs_Click(object sender, RoutedEventArgs e)
         {
