@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace SpriteMap
 {
@@ -88,28 +89,41 @@ namespace SpriteMap
         {
 
         }
-        private void miFileSaveAs_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
         private void miFileExport_Click(object sender, RoutedEventArgs e)
         {
-            string path = Directory.GetCurrentDirectory() + "\\spritesheet.png";
-            RenderTargetBitmap rtb = new RenderTargetBitmap((int)bSpriteSheet.Width, (int)bSpriteSheet.Height, 96d, 96d, System.Windows.Media.PixelFormats.Default);
-            cSpriteSheet.Background.Opacity = 0d;
-            rtb.Render(cSpriteSheet);
+            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
+            sfd.InitialDirectory = Directory.GetCurrentDirectory();
+            sfd.Filter = "PNG|*.png";
+            sfd.DefaultExt = ".png";
 
-            var stm = System.IO.File.Create(path);
+            if (sfd.ShowDialog() == true)
+            {
+                string path = sfd.FileName;
+                //path = Directory.GetCurrentDirectory() + "\\spritesheet.png";
+                RenderTargetBitmap rtb = new RenderTargetBitmap((int)bSpriteSheet.Width, (int)bSpriteSheet.Height, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+                cSpriteSheet.Background.Opacity = 0d;
+                rtb.Render(cSpriteSheet);
 
-            BitmapEncoder pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-            pngEncoder.Save(stm);
-            cSpriteSheet.Background.Opacity = 1d;
-            stm.Close();
-        }
-        private void miFileExportAs_Click(object sender, RoutedEventArgs e)
-        {
+                var stm = System.IO.File.Create(path);
 
+                BitmapEncoder pngEncoder = new PngBitmapEncoder();
+                pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+                pngEncoder.Save(stm);
+                cSpriteSheet.Background.Opacity = 1d;
+                stm.Close();
+
+                if (lSpriteSheet.Count > 0)
+                {
+                    if (File.Exists("test.xml"))
+                    {
+                        File.Delete("test.xml");
+                    }
+                    XmlSerializer xs = new XmlSerializer(lSpriteSheet.GetType());
+                    FileStream fs = File.OpenWrite("test.xml");
+                    xs.Serialize(fs, lSpriteSheet);
+                    fs.Close();
+                }
+            }
         }
         private void miFileQuit_Click(object sender, RoutedEventArgs e)
         {
@@ -129,14 +143,12 @@ namespace SpriteMap
             {
                 foreach (string filepath in ofd.FileNames)
                 {
-                    int offset = filepath.LastIndexOf("\\");
-                    string name = filepath.Substring(offset + 1, filepath.Length - offset - 1);
-                    lbSprites.Items.Add(name);
-                    //if (dSprites.ContainsKey(name))
-                    dSprites.Add(name, filepath);
+                    LoadSprite(filepath);
                 }
+                lbSprites.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+                SortTiles(lSpriteSheet, bSpriteSheet);
             }
-            lbSprites.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+
         }
         private void miEditAddFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -155,12 +167,11 @@ namespace SpriteMap
                 string[] files = GetFiles(folderpath, "*.jpg;*.jpeg;*.png;", SearchOption.AllDirectories);
                 foreach (string filepath in files)
                 {
-                    int offset = filepath.LastIndexOf("\\");
-                    string name = filepath.Substring(offset + 1, filepath.Length - offset - 1);
-                    lbSprites.Items.Add(name);
+                    LoadSprite(filepath);
                 }
+                lbSprites.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
+                SortTiles(lSpriteSheet, bSpriteSheet);
             }
-            lbSprites.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("", System.ComponentModel.ListSortDirection.Ascending));
         }
         private void miEditDelete_Click(object sender, RoutedEventArgs e)
         {
@@ -170,8 +181,8 @@ namespace SpriteMap
         //  Tools Menu Items
         private void miToolsSettings_Click(object sender, RoutedEventArgs e)
         {
-            var SettingWindow = new Settings(GridSnapX, GridSnapY, GridSnap, CanvasSize);
-            SettingWindow.Show();
+            //var SettingWindow = new Settings(GridSnapX, GridSnapY, GridSnap, CanvasSize);
+            //SettingWindow.Show();
         }
 
         //  Sprites ListView
@@ -318,6 +329,63 @@ namespace SpriteMap
                 }
             }
             return null;
+        }
+        private static void SortTiles(List<Tile> Tiles, Border canvas)
+        {
+            List<Tile> descending = new List<Tile>(Tiles);
+            descending.Sort();
+
+            //  Work out the square size needed for the Canvas
+            double sqr = Math.Sqrt((double)Tiles.Count);
+            int size = (int)sqr;
+            if (sqr % 1 != 0)
+                size++;
+
+            //  How wide the Canvas will need to be            
+            int width = (int)descending[0].Size.X;
+            
+            //  How high the Canvas will need to be
+            int height = (int)descending[0].Size.Y;
+            foreach (Tile tile in descending)
+                if (tile.Size.Y > height)
+                    height = (int)tile.Size.Y;
+
+            //bSpriteSheet
+            canvas.SetValue(Canvas.WidthProperty, (double)(width * size));
+            canvas.SetValue(Canvas.HeightProperty, (double)height * size);
+
+            //  Sort the Tiles onto the Canvas
+            int x = 0, y = 0;
+            for (int i = 0; i < Tiles.Count; ++i)
+            {
+
+                Tiles[i].Position.X = width * x;
+                Tiles[i].Position.Y = height * y;
+
+                Canvas.SetLeft(Tiles[i].Sprite, Tiles[i].Position.X);
+                Canvas.SetTop(Tiles[i].Sprite, Tiles[i].Position.Y);
+
+                x++;
+                if (x >= size)
+                {
+                    x = 0;
+                    y++;
+                }
+            }
+        }
+        private void LoadSprite(string filepath)
+        {
+            int offset = filepath.LastIndexOf("\\");
+            string name = filepath.Substring(offset + 1, filepath.Length - offset - 1);
+            if (!dSprites.ContainsKey(name))
+            {
+                lbSprites.Items.Add(name);
+                dSprites.Add(name, filepath);
+                Tile tile = new Tile(filepath, new Point(0, 0));
+                lSpriteSheet.Add(tile);
+                lbLayers.Items.Add(tile.Name);
+                cSpriteSheet.Children.Add(tile.Sprite);
+            }
         }
     }
 }

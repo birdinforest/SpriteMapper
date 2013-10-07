@@ -31,9 +31,7 @@
                 <MenuItem Header="_New" Click="miFileNew_Click" Name="miNew" ></MenuItem>
                 <MenuItem Header="_Open" Click="miFileOpen_Click" Name="miOpen"></MenuItem>
                 <MenuItem Header="_Save" Click="miFileSave_Click" Name="miSave"></MenuItem>
-                <MenuItem Header="_Save As..." Click="miFileSaveAs_Click" Name="miSaveAs"></MenuItem>
                 <MenuItem Header="_Export" Click="miFileExport_Click" Name="miExport"></MenuItem>
-                <MenuItem Header="_Export As..." Click="miFileExportAs_Click" Name="miExportAs"></MenuItem>
                 <MenuItem Header="_Quit" Click="miFileQuit_Click" Name="miQuit"></MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit " Name="miEdit">

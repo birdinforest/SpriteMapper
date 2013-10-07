@@ -9,7 +9,8 @@ using System.Windows.Media.Imaging;
 
 namespace SpriteMap
 {
-    public class Tile
+    [Serializable]
+    public class Tile : IComparable<Tile>
     {
         public string Name;
         public string Filepath;
@@ -34,6 +35,14 @@ namespace SpriteMap
 
             Size.X = image.Width;
             Size.Y = image.Height;
+        }
+
+        public int CompareTo(Tile other)
+        {
+            //  -1* Forces Descending Order
+            if (Size.X == other.Size.X)
+                return -1*Size.Y.CompareTo(other.Size.Y);
+            return -1*Size.X.CompareTo(other.Size.X);
         }
     }
 }
