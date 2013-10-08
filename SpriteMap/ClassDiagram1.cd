@@ -27,7 +27,7 @@
       <HashCode>AAAAAAAAAAAAgAQgAAAAAAQAAAAAAAAQAAQAAAAAAAA=</HashCode>
       <FileName>Tile.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="SpriteMap.Properties.Resources">
     <Position X="4" Y="3.75" Width="1.5" />
