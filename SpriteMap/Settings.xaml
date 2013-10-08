@@ -1,0 +1,17 @@
+﻿<Window x:Class="SpriteMap.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Height="200" Width="205" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" ShowInTaskbar="False">
+    <Grid>
+        <Label Content="Grid Snap Size" Height="28" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="12,12,0,0" Name="label2" VerticalAlignment="Top" VerticalContentAlignment="Center" Width="160" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="11,60,0,0" Name="tSnapX" VerticalAlignment="Top" Width="70" TextChanged="tSnapX_TextChanged" />
+        <CheckBox Content="Snap To X" Height="16" HorizontalAlignment="Left" Margin="12,38,0,0" Name="cSnapX" VerticalAlignment="Top" Checked="cSnapX_Checked" Unchecked="cSnapX_Unchecked" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="102,60,0,0" Name="tSnapY" VerticalAlignment="Top" Width="70" TextChanged="tSnapY_TextChanged" />
+        <CheckBox Content="Snap To Y" Height="16" HorizontalAlignment="Right" Margin="0,38,11,0" Name="cSnapY" VerticalAlignment="Top" Checked="cSnapY_Checked" Unchecked="cSnapY_Unchecked" />
+        
+        <Label Content="Canvas Size" Height="28" HorizontalAlignment="Left" Margin="12,94,0,0" Name="label1" VerticalAlignment="Top" Width="160" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="12,118,0,0" Name="tCanvasX" VerticalAlignment="Top" Width="70" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="102,118,0,0" Name="tCanvasY" VerticalAlignment="Top" Width="70" />
+        
+    </Grid>
+</Window>

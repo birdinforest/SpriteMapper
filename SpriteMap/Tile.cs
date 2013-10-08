@@ -9,7 +9,6 @@ using System.Windows.Media.Imaging;
 
 namespace SpriteMap
 {
-    [Serializable]
     public class Tile : IComparable<Tile>
     {
         public string Name;
@@ -17,6 +16,8 @@ namespace SpriteMap
         public Image Sprite;
         public Point Position;
         public Point Size;
+
+        internal Tile() { } 
 
         public Tile(string _Filepath, Point _Position)
         {
@@ -33,8 +34,8 @@ namespace SpriteMap
             Canvas.SetLeft(Sprite, Position.X);
             Canvas.SetTop(Sprite, Position.Y);
 
-            Size.X = image.Width;
-            Size.Y = image.Height;
+            Size.X = (double)((int)image.Width);
+            Size.Y = (double)((int)image.Height);
         }
 
         public int CompareTo(Tile other)

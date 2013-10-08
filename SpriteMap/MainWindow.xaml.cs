@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
+using Microsoft.Win32;
+using System.Windows.Markup;
+using System.Xml;
+using System.IO.Compression;
 
 namespace SpriteMap
 {
@@ -99,7 +103,6 @@ namespace SpriteMap
             if (sfd.ShowDialog() == true)
             {
                 string path = sfd.FileName;
-                //path = Directory.GetCurrentDirectory() + "\\spritesheet.png";
                 RenderTargetBitmap rtb = new RenderTargetBitmap((int)bSpriteSheet.Width, (int)bSpriteSheet.Height, 96d, 96d, System.Windows.Media.PixelFormats.Default);
                 cSpriteSheet.Background.Opacity = 0d;
                 rtb.Render(cSpriteSheet);
@@ -113,16 +116,7 @@ namespace SpriteMap
                 stm.Close();
 
                 if (lSpriteSheet.Count > 0)
-                {
-                    if (File.Exists("test.xml"))
-                    {
-                        File.Delete("test.xml");
-                    }
-                    XmlSerializer xs = new XmlSerializer(lSpriteSheet.GetType());
-                    FileStream fs = File.OpenWrite("test.xml");
-                    xs.Serialize(fs, lSpriteSheet);
-                    fs.Close();
-                }
+                    WriteXML(path);
             }
         }
         private void miFileQuit_Click(object sender, RoutedEventArgs e)
@@ -181,8 +175,8 @@ namespace SpriteMap
         //  Tools Menu Items
         private void miToolsSettings_Click(object sender, RoutedEventArgs e)
         {
-            //var SettingWindow = new Settings(GridSnapX, GridSnapY, GridSnap, CanvasSize);
-            //SettingWindow.Show();
+            var SettingWindow = new Settings(GridSnapX, GridSnapY, GridSnap, CanvasSize);
+            SettingWindow.Show();
         }
 
         //  Sprites ListView
@@ -385,6 +379,44 @@ namespace SpriteMap
                 lSpriteSheet.Add(tile);
                 lbLayers.Items.Add(tile.Name);
                 cSpriteSheet.Children.Add(tile.Sprite);
+            }
+        }
+        private void WriteXML(string path)
+        {
+            int offset = path.LastIndexOf("\\");
+            string name = path.Substring(offset + 1, path.Length - offset - 1);
+            path = path.Substring(0, path.LastIndexOf("."));
+
+            //Start the settings and set Indent to true for cleaner looking code
+            XmlWriterSettings XWSettings = new XmlWriterSettings();
+            XWSettings.Indent = true;
+            //start the writer
+            using (XmlWriter XMLWriter = XmlWriter.Create(path + ".xml", XWSettings))
+            {
+                //Start the XML writer
+                XMLWriter.WriteStartDocument();
+                XMLWriter.WriteStartElement("SpriteSheet");
+
+                //Export Canvas Properties
+                XMLWriter.WriteAttributeString("Count", lSpriteSheet.Count.ToString());
+                XMLWriter.WriteAttributeString("Width", cSpriteSheet.ActualWidth.ToString());
+                XMLWriter.WriteAttributeString("Height", cSpriteSheet.ActualHeight.ToString());
+                XMLWriter.WriteAttributeString("Image", name);
+
+                //For each image, export its relevant content
+                for (int i = 0; i < lSpriteSheet.Count; ++i)
+                {
+                    XMLWriter.WriteStartElement("Image");
+                    XMLWriter.WriteAttributeString("X", lSpriteSheet[i].Position.X.ToString());
+                    XMLWriter.WriteAttributeString("Y", lSpriteSheet[i].Position.Y.ToString());
+                    XMLWriter.WriteAttributeString("Width", lSpriteSheet[i].Size.X.ToString());
+                    XMLWriter.WriteAttributeString("Height", lSpriteSheet[i].Size.Y.ToString());
+                    XMLWriter.WriteAttributeString("Name", lSpriteSheet[i].Name.Substring(0, lSpriteSheet[i].Name.LastIndexOf(".")));
+                    XMLWriter.WriteAttributeString("Id", i.ToString());
+                    //XMLWriter.WriteAttributeString("Path", lSpriteSheet[i].Filepath.ToString());
+                    XMLWriter.WriteEndElement();
+                }
+                XMLWriter.WriteEndDocument();
             }
         }
     }
